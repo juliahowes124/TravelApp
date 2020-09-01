@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Card from '../../shared/components/UIElements/Card';
+import Button from '../../shared/components/FormElements/Button';
 import './PostItem.css';
 
 const PostItem = props => {
@@ -16,9 +17,11 @@ const PostItem = props => {
                     <p>{props.caption}</p>
                 </div>
                 <div className="post-item__actions">
-                    <button>VIEW ON MAP</button>
-                    <button>EDIT</button>
-                    <button>DELETE</button>
+                    <Button inverse>VIEW ON MAP</Button>
+                    <Button>LIKE</Button>
+                    <Button inverse to={`/${props.creator}/posts`}>VIEW USER</Button>
+                    <Button to={`/posts/${props.id}`}>EDIT</Button>
+                    <Button danger>DELETE</Button>
                 </div>  
             </Card>
         </li>

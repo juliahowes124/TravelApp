@@ -1,24 +1,38 @@
 import React from 'react';
-// import { NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 import './NavLinks.css';
+import Button from '../FormElements/Button';
 
 const NavLinks = () => {
     return <ul className="nav-links">
     <li>
-        ALL USERS
+        <NavLink to="/" exact>HOME</NavLink>
     </li>
     <li>
-        MY POSTS
+        <NavLink to="/users" exact>USERS</NavLink>
     </li>
     <li>
-        ADD POST
+        <NavLink to="/u1/posts">MY POSTS</NavLink>
     </li>
     <li>
-        AUTHENTICATE
+        <NavLink to="/posts/new">NEW POST</NavLink>
     </li>
     <li>
-        <button>LOGOUT</button></li>
+        <NavLink to="/u1/likes">LIKED POSTS</NavLink>
+    </li>
+    <li>
+        <Button>LOGOUT</Button>
+    </li>
+    <li>
+        <NavLink to="/u1/edit">EDIT PROFILE</NavLink>
+    </li>
+    <li>
+        <NavLink to="/auth">SIGN IN</NavLink>
+    </li>
+    <li>
+        <NavLink to="/auth">REGISTER</NavLink>
+    </li>
 </ul>
 }
 

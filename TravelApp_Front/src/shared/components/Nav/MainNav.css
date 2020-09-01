@@ -24,21 +24,21 @@
   .main-navigation__header-nav {
     height: 100%;
   }
-/*   
+  
   .main-navigation__header-nav {
     display: none;
   }
   
   .main-navigation__drawer-nav {
     height: 100%;
-  } */
+  }
    
-  /* @media (min-width: 768px) {
+  @media (min-width: 768px) {
     .main-navigation__menu-btn {
       display: block;
     }
   
     .main-navigation__header-nav {
       display: block;
-    } */
-/* } */
+    }
+  }
