@@ -4,7 +4,6 @@ const UserLikes = () => {
     return (
         <div>
             <h1>User Likes Works!</h1>
-            <h1>User Likes Works!</h1>
         </div>
         
     ) 

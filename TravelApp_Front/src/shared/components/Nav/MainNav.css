@@ -32,10 +32,15 @@
   .main-navigation__drawer-nav {
     height: 100%;
   }
+
+  .main-navigation__drawer-btn {
+    background-color: transparent;
+    float: right;
+  }
    
   @media (min-width: 768px) {
     .main-navigation__menu-btn {
-      display: block;
+      display:none;
     }
   
     .main-navigation__header-nav {

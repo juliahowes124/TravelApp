@@ -7,9 +7,6 @@ import Button from '../FormElements/Button';
 const NavLinks = () => {
     return <ul className="nav-links">
     <li>
-        <NavLink to="/" exact>HOME</NavLink>
-    </li>
-    <li>
         <NavLink to="/users" exact>USERS</NavLink>
     </li>
     <li>
@@ -21,7 +18,7 @@ const NavLinks = () => {
     <li>
         <NavLink to="/u1/likes">LIKED POSTS</NavLink>
     </li>
-    <li>
+    {/* <li>
         <Button>LOGOUT</Button>
     </li>
     <li>
@@ -32,7 +29,7 @@ const NavLinks = () => {
     </li>
     <li>
         <NavLink to="/auth">REGISTER</NavLink>
-    </li>
+    </li> */}
 </ul>
 }
 
