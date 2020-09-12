@@ -16,7 +16,7 @@ const UserItem = props => {
                 <div className="user-item__info">
                     <h2>{props.name}</h2>
                     <p>{props.username}</p>
-                    <Button to={`/${props.id}/places`}>
+                    <Button inverse to={`/${props.id}/posts`}>
                         See Posts
                     </Button>
                 </div>

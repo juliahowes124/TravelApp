@@ -5,6 +5,7 @@ import Button from '../../shared/components/FormElements/Button';
 import './PostItem.css';
 
 const PostItem = props => {
+    console.log(props.creatorId);
     return (
         <li className="post-item">
             <Card className="post-item__content">
@@ -19,7 +20,7 @@ const PostItem = props => {
                 <div className="post-item__actions">
                     <Button inverse>VIEW ON MAP</Button>
                     <Button>LIKE</Button>
-                    <Button inverse to={`/${props.creator}/posts`}>VIEW USER</Button>
+                    <Button inverse to={`/${props.creatorId}/posts`}>VIEW USER</Button>
                     <Button to={`/posts/${props.id}`}>EDIT</Button>
                     <Button danger>DELETE</Button>
                 </div>  

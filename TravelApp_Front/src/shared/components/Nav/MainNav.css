@@ -34,17 +34,19 @@
     height: 100%;
   }
   
-  .main-navigation__header-nav {
+  /* .main-navigation__header-nav {
     display: none;
   }
-  
+   */
   .main-navigation__drawer-nav {
     height: 100%;
   }
 
-  .main-navigation__drawer-btn {
+  .button{
     background-color: transparent;
+    padding: 5px 10px 5px 10px;
     float: right;
+    margin-top: 10px;
   }
 
   .main-navigation__header-dropdown Button{

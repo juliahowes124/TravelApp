@@ -18,7 +18,7 @@ const MainNav = props => {
     return (
         <React.Fragment>
         {drawerIsOpen && (<SideDrawer> 
-            <button className="main-navigation__drawer-btn" onClick={closeDrawerHandler}>X</button>
+            <Button inverse className="main-navigation__drawer-btn" onClick={closeDrawerHandler}>X</Button>
             <nav className="main-navigation__drawer-nav">
                 <NavLinks />
             </nav>
