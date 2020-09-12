@@ -17,7 +17,7 @@ const UserItem = props => {
                     <h2>{props.name}</h2>
                     <p>{props.username}</p>
                     <Button inverse to={`/${props.id}/posts`}>
-                        See Posts
+                        View Profile
                     </Button>
                 </div>
                 </Card>

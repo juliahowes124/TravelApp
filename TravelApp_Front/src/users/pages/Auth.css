@@ -1,0 +1,10 @@
+.auth {
+    width: 30%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5%;
+}
+
+.auth h2 {
+    text-align: center;
+}

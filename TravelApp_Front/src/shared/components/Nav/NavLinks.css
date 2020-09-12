@@ -22,7 +22,6 @@
   }
 
   .nav-links a {
-    border: 1px solid transparent;
     color: var(--dark);
     text-decoration: none;
     padding: 0.5rem;
@@ -39,7 +38,6 @@
     cursor: pointer;
     border: 1px solid var(--secondary);
     color: var(--secondary);
-    background: transparent;
     padding: 0.5rem;
     font: inherit;
   }

@@ -33,9 +33,10 @@ const MainNav = props => {
             <h1 className="main-navigation__title">
             Travel Site
             </h1>
-            <dropdown className="main-navigation__header-dropdown">
-                <Button>Auth Button</Button>
-            </dropdown>
+            <div className="main-navigation__auth">
+                <Button to={`/auth/login`}>Login</Button>
+                <Button inverse to={`/auth/register`}>Register</Button>
+            </div>
         </MainHeader>
      </React.Fragment>
     )

@@ -32,16 +32,51 @@ const POSTS = [
     }
 ];
 
+const USERS = [
+    {
+        id: 'u1',
+        username: '@julia123',
+        name: 'Julia Howes',
+        image: 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg',
+        posts: 3
+    },
+    {
+        id: 'u2',
+        username: '@neil123',
+        name: 'Neil Schultz-Cox',
+        image: 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg',
+        posts: 2
+    }
+];
+
 const UserPosts = () => {
     const userId = useParams().uid;
+    const user = USERS.find(u => u.id === userId);
     const userPosts = POSTS.filter(post => post.creator === userId);
+
     if (userPosts.length === 0) {
         return (
-            <Card className="no-places">This user has no posts.</Card>
+            <React.Fragment>
+                <Card className="no-places">This user has no posts.</Card>
+
+            </React.Fragment>
+            
         )
     }
     return (
-        <PostList items={userPosts} />
+        <React.Fragment>
+            <div className="user-posts__user-info">
+                <img src={user.image} alt=""/>
+                <div className="user-posts__user-details">
+                    <h2>{user.name}</h2>
+                    <p>{user.username}</p>
+                </div>
+                <p>{user.posts} Posts</p>
+                
+            </div>
+            <PostList items={userPosts} />
+        </React.Fragment>
+       
         
     ) 
 };

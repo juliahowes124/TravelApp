@@ -43,13 +43,12 @@
   }
 
   .button{
-    background-color: transparent;
     padding: 5px 10px 5px 10px;
     float: right;
     margin-top: 10px;
   }
 
-  .main-navigation__header-dropdown Button{
+  .main-navigation__auth Button{
     background-color: var(--secondary);
     border-color: var(--secondary);
     flex-basis: 33.3%;

@@ -38,7 +38,7 @@ function App() {
         <Route path="/posts/:pid">
           <UpdatePost />
         </Route>
-        <Route path="/auth">
+        <Route path="/auth/:authMode">
           <Auth />
         </Route>
         <Redirect to="/" />
