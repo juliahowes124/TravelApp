@@ -1,3 +1,10 @@
+:root {
+  --primary:aqua;
+  --secondary: #ec576b;
+  --dark: black;
+  --accent: #e5e333;
+}
+
 .main-navigation__menu-btn {
     width: 3rem;
     height: 3rem;
@@ -8,17 +15,19 @@
     justify-content: space-around;
     margin-right: 2rem;
     cursor: pointer;
+    flex-basis: 33.3%;
   }
   
   .main-navigation__menu-btn span {
     display: block;
     width: 3rem;
     height: 2.5px;
-    background: rgb(97, 94, 94);
+    background: var(--secondary);
   }
 
   .main-navigation__title {
     color: rgb(27, 26, 26);
+    flex-basis: 33.3%;
   }
 
   .main-navigation__header-nav {
@@ -37,13 +46,9 @@
     background-color: transparent;
     float: right;
   }
-   
-  @media (min-width: 768px) {
-    .main-navigation__menu-btn {
-      display:none;
-    }
-  
-    .main-navigation__header-nav {
-      display: block;
-    }
+
+  .main-navigation__header-dropdown Button{
+    background-color: var(--secondary);
+    border-color: var(--secondary);
+    flex-basis: 33.3%;
   }

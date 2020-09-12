@@ -1,13 +1,15 @@
+
+
 .main-header {
     height: 4rem;
     width: 100%;
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    position: fixed;
+    position: sticky;
     top: 0;
     left: 0;
-    background: #9ed65e;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.26);
+    background-color: white;
     padding: 0 1rem;
     z-index: 5;
 }

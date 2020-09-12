@@ -37,14 +37,3 @@
   .nav-links button:focus {
     outline: none;
   }
-
-  @media (min-width: 768px) {
-    .nav-links{
-      display: flex;
-    }
-
-    .nav-links li {
-      margin: 1rem;
-      text-align: center;
-    }
-  }

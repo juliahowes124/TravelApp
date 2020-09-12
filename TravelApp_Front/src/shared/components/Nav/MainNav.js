@@ -33,9 +33,6 @@ const MainNav = props => {
             <h1 className="main-navigation__title">
             Travel Site
             </h1>
-            <nav className="main-navigation__header-nav">
-                <NavLinks />
-            </nav>
             <dropdown className="main-navigation__header-dropdown">
                 <Button>Auth Button</Button>
             </dropdown>

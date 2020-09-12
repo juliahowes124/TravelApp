@@ -16,6 +16,18 @@ const Posts = () => {
                 lng: -73.9857
             },
             creator: 'u1'
+        },
+        {
+            id: 'p2',
+            title: 'Great Wall of China',
+            caption: 'A big wall!',
+            imageUrl: 'https://www.snopes.com/tachyon/2018/07/great_wall_of_china.jpg?resize=865,452',
+            address: 'Huairou District, China',
+            location: {
+                lat: 40.4319,
+                lng: 116.5704
+            },
+            creator: 'u2'
         }
     ];
 
