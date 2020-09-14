@@ -7,6 +7,9 @@ import Button from '../FormElements/Button';
 const NavLinks = () => {
     return <ul className="nav-links">
     <li>
+        <NavLink to="/" exact>HOME</NavLink>
+    </li>
+    <li>
         <NavLink to="/users" exact>USERS</NavLink>
     </li>
     <li>
