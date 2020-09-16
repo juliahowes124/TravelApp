@@ -2,6 +2,8 @@
 
 A minimalist social app for sharing travel experiences. 
 
+[See Feature Demos](#feature-demos)
+
 ## Inspiration
 This is similar to a project I built while taking this Udemy [course](https://www.udemy.com/course/react-nodejs-express-mongodb-the-mern-fullstack-guide/).
 I wanted to start a new project from scratch to solidify my knowledge of the MERN stack, while adding my own custom features.
