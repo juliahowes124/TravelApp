@@ -1,13 +1,15 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 
 import Card from '../../shared/components/UIElements/Card';
 import Button from '../../shared/components/FormElements/Button';
 import Modal from '../../shared/components/UIElements/Modal';
 import Map from '../../shared/components/UIElements/Map';
+import { AuthContext } from '../../shared/context/auth-context';
 import './PostItem.css';
 
 const PostItem = props => {
+    const auth = useContext(AuthContext);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [showMapModal, setShowMapModal] = useState(false);
 
@@ -29,8 +31,6 @@ const PostItem = props => {
         setShowMapModal(false);
     }
 
-
-    const isUsersPost = false;
     return (
         <React.Fragment>
 
@@ -75,18 +75,17 @@ const PostItem = props => {
                 </div>
                 <div className="post-item__actions">
                     <Button inverse onClick={showMapHandler}>VIEW ON MAP</Button>
-                    {!isUsersPost && (
-                        <React.Fragment>
-                            <Button inverse to={`/${props.creatorId}/posts`}>VIEW USER</Button>
-                            <Button>LIKE</Button>
-                        </React.Fragment>
-                    )}
-                    {isUsersPost && (
+                    <Button inverse to={`/${props.creatorId}/posts`}>VIEW USER</Button>
+                    {auth.isLoggedIn && (
                         <React.Fragment>
                             <Button to={`/posts/${props.id}`}>EDIT</Button>
                             <Button onClick={showDeleteWarningHandler} danger>DELETE</Button>
+                            <Button to={'/u1/likes'}>LIKE</Button>
                         </React.Fragment>
                     )}
+                    {!auth.isLoggedIn && (
+                        <Button to={'/auth/register'}>LIKE</Button>
+                    )} 
                     
                 </div>  
             </Card>
