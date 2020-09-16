@@ -1,7 +1,7 @@
 const HttpError = require('../models/http-error');
 const { v4: uuid } = require('uuid');
 const { validationResult } = require('express-validator');
-// const getCoordsForAddress = require('../util/location');
+const getCoordsForAddress = require('../util/location');
 
 let DUMMY_POSTS = [
     {
@@ -52,30 +52,41 @@ const getLikedPosts = (req, res, next) => {
 }
 
 const getLikesForPost = (req, res, next) => {
+    const postId = req.params.pid;
+    const post = DUMMY_POSTS.find(p => {
+        return p.id === postId;
+    });
+    if (!post) {
+        return next(new HttpError('Could not find post with provided id', 404));
+    }
+
     res.json({message: "retrieves likes for post"});
 }
 
 const createPost = async (req, res, next) => {
     const {title, caption, address, creator} = req.body;
-    // const errors = validationResult(req);
-    // if (!errors.isEmpty()) {
-    //     return next(new HttpError('Invalid inputs passed, please check your data', 422));
-    // }
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return next(new HttpError('Invalid inputs passed, please check your data', 422));
+    }
+
+    let coordinates;
+    try {
+        coordinates = await getCoordsForAddress(address);
+    } catch (error) {
+        return next(error);
+    }
 
     const createdPost = {
         id: uuid(),
         title,
         caption,
+        location: coordinates,
         address,
         creator
     }
 
-    // let coordinates;
-    // try {
-    //     coordinates = await getCoordsForAddress(address);
-    // } catch (error) {
-    //     return next(error);
-    // }
+    
 
     DUMMY_POSTS.push(createdPost);
 
@@ -83,6 +94,13 @@ const createPost = async (req, res, next) => {
 }
 
 const createLike = async (req, res, next) => {
+    const postId = req.params.pid;
+    const post = DUMMY_POSTS.find(p => {
+        return p.id === postId;
+    });
+    if (!post) {
+        return next(new HttpError('Could not find post with provided id', 404));
+    }
     res.json({message: "creates a like"});
 }
   
@@ -98,6 +116,14 @@ const deletePost = (req, res, next) => {
 };
 
 const deleteUserFromLikes = (req, res, next) => {
+    const postId = req.params.pid;
+    const userId = req.params.uid;
+    const post = DUMMY_POSTS.find(p => {
+        return p.id === postId;
+    });
+    if (!post) {
+        return next(new HttpError('Could not find post with provided id', 404));
+    }
     res.json({message: 'Deletes user from likes'});
 }
 
