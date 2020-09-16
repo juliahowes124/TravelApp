@@ -34,7 +34,7 @@ const MainNav = props => {
                 <span />
             </button>
             <h1 className="main-navigation__title">
-            <NavLink to="/">Travel App</NavLink>
+            <NavLink to="/" style={{ textDecoration: 'none', color: 'black' }}>Travel App</NavLink>
             </h1>
             {!auth.isLoggedIn && (
                 <div className="main-navigation__auth">

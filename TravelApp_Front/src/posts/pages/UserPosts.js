@@ -72,11 +72,13 @@ const UserPosts = () => {
                 <div className="user-posts__user-details">
                     <h2>{user.name}</h2>
                     <p>{user.username}</p>
+                    <p>{user.posts} Posts</p>
                 </div>
-                <p>{user.posts} Posts</p>
+                
+                
                 
             </div>
-            <PostList items={userPosts} />
+            <PostList isUserPosts="true" items={userPosts} />
         </React.Fragment>
        
         

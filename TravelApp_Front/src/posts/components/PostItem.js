@@ -76,7 +76,9 @@ const PostItem = props => {
                 </div>
                 <div className="post-item__actions">
                     <Button inverse onClick={showMapHandler}>VIEW ON MAP</Button>
-                    <Button inverse to={`/${props.creatorId}/posts`}>VIEW USER</Button>
+                    {!props.isUserPosts && (
+                        <Button inverse to={`/${props.creatorId}/posts`}>VIEW USER</Button>
+                    )}
                     {auth.isLoggedIn && (
                         <React.Fragment>
                             <Button to={`/posts/${props.id}`}>EDIT</Button>

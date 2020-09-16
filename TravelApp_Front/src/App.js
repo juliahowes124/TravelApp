@@ -18,7 +18,6 @@ function App() {
   
   const login = useCallback(() => {
     setIsLoggedIn(true);
-    return <Redirect to="/" exact/>
   }, []);
   const logout = useCallback(() => {
     setIsLoggedIn(false);
@@ -70,7 +69,7 @@ function App() {
         <Route path="/auth/:authMode">
           <Auth />
         </Route>
-        <Redirect to="/auth/register"/>
+        <Redirect to="/"/>
       </React.Fragment>
         
     );

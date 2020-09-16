@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useContext, useState } from 'react';
 
 import Input from '../../shared/components/FormElements/Input';
@@ -86,6 +86,13 @@ const Auth = () => {
                     errorText="Password must be at least 3 characters long."
                     onInput={inputHandler}
                 />
+                {authMode==='register' && (
+                    <p>
+                        Already have an account? 
+                        <Link to="/auth/login"> Sign In</Link>
+                    </p>
+                    
+                )}
                 <Button type="submit" disabled={!formState.isValid}>{authMode==='login' ? 'LOGIN' : 'REGISTER'}</Button>
             </form>
         </Card>

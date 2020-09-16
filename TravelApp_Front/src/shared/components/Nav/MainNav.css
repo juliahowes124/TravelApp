@@ -26,7 +26,7 @@
   }
 
   .main-navigation__title {
-    color: rgb(27, 26, 26);
+    color: var(--dark);
     flex-basis: 33.3%;
   }
 

@@ -8,21 +8,26 @@
 
 .user-posts__user-info {
     display: flex;
-    justify-content: space-between;
+    justify-content: left;
     margin-top: 5%;
-    width: 30%;
+    width: 40%;
     margin-left: auto;
     margin-right: auto;
 }
 
 .user-posts__user-info img{
-    width: 100px;
-    height: 100px;
+    width: 90px;
+    height: 90px;
     border-radius: 50%;
-    margin-right: 20px;
+    margin: 10px 30px 0 0;
 
 }
 
 .user-posts__user-details h2 {
     padding: 0;
+    margin-bottom: 0px;
+}
+
+.user-posts__user-details p {
+    margin: 0px;
 }

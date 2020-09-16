@@ -22,6 +22,7 @@ const PostList = props => {
                 creatorId={post.creator} 
                 coordinates={post.location}
                 datePosted={post.datePosted}
+                isUserPosts={props.isUserPosts}
             />
         ))}
     </ul>
