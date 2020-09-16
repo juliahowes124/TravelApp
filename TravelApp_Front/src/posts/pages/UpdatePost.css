@@ -1,4 +1,4 @@
-.new-post {
+.update-post {
     width: 50%;
     margin-left: auto;
     margin-right: auto;
@@ -6,7 +6,7 @@
 }
 
 @media (max-width: 700px) {
-    .new-post {
+    .update-post {
       width: 90%;
       margin-top: 20%;
     }

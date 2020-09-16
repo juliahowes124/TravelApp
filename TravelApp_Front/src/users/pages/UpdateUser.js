@@ -6,6 +6,7 @@ import Card from '../../shared/components/UIElements/Card';
 import Button from '../../shared/components/FormElements/Button';
 import { VALIDATOR_REQUIRE, VALIDATOR_EMAIL} from '../../shared/util/validators';
 import { useForm } from '../../shared/hooks/form-hook';
+import './UpdateUser.css';
 
 const USERS = [
     {
@@ -78,7 +79,7 @@ const UpdateUser = () => {
     }
 
     return (
-        <Card className="new-post">
+        <Card className="update-user">
             <h2>Edit Info</h2>
             <hr />
             <form className="place-form" onSubmit={postSubmitHandler}>

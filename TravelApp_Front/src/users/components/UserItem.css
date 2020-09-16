@@ -8,6 +8,9 @@
 
 .user-item {
     margin-bottom: 10%;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .user-item__image {
@@ -46,3 +49,9 @@
 .user-item__content {
     display: flex;
 }
+
+@media (max-width: 700px) {
+    .user-item {
+      width: 90%;
+    }
+  }

@@ -7,6 +7,8 @@ import Button from '../../shared/components/FormElements/Button';
 import { VALIDATOR_REQUIRE } from '../../shared/util/validators';
 import { useForm } from '../../shared/hooks/form-hook';
 
+import './UpdatePost.css';
+
 const POSTS = [
     {
         id: 'p1',
@@ -96,7 +98,7 @@ const UpdatePost = () => {
     }
 
     return (
-        <Card className="new-post">
+        <Card className="update-post">
             <h2>Edit Post</h2>
             <hr />
             <form className="place-form" onSubmit={postSubmitHandler}>

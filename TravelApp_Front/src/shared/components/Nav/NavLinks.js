@@ -20,7 +20,7 @@ const NavLinks = () => {
                 <NavLink to="/u1/posts">MY POSTS</NavLink>
             </li>
             <li>
-                <NavLink to="/posts/new">NEW POST</NavLink>
+                <NavLink to="/new">NEW POST</NavLink>
             </li>
             <li>
                 <NavLink to="/u1/likes">LIKED POSTS</NavLink>

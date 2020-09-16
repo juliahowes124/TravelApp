@@ -2,17 +2,21 @@
     margin: 1rem 0;
     list-style: none;
     
-  }
+}
   
-  .post-item__content {
-    padding: 0;
-  }
+.post-item__content {
+  padding: 0;
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+  
+}
 
 .post-item__image {
     width: 100%;
     height: 12.5rem;
     margin-right: 1.5rem;
-  }
+}
 
 .post-item__info h2,
 .post-item__info h3,
@@ -44,8 +48,12 @@
     width: 100%;
   }
 
-  @media (min-width: 768px) {
-    .post-item__image {
-      height: 20rem;
-    } 
+  @media (max-width: 700px) {
+    .post-item__content {
+      margin-top: 20%;
+      width: 90%;
+      margin-left: 0px;
+    }
+
+  
   }

@@ -43,10 +43,10 @@ function App() {
         <Route path="/:uid/likes" exact>
           <UserLikes />
         </Route>
-        <Route path="/posts/new">
+        <Route path="/new" exact>
           <NewPost />
         </Route>
-        <Route path="/posts/:pid">
+        <Route path="/posts/:pid" exact>
           <UpdatePost />
         </Route>
         <Redirect to="/"/>
