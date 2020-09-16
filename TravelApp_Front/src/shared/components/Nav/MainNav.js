@@ -45,6 +45,7 @@ const MainNav = props => {
             {auth.isLoggedIn && (
                 <div className="main-navigation__auth">
                 <Button onClick={auth.logout}>Logout</Button>
+                <Button to={`/u1/edit`}>Edit Info</Button>
                 </div>
             )}
             

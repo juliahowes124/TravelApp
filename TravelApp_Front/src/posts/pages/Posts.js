@@ -15,7 +15,8 @@ const Posts = () => {
                 lat: 40.7484,
                 lng: -73.9857
             },
-            creator: 'u1'
+            creator: 'u1',
+            datePosted: '01/01/2021'
         },
         {
             id: 'p2',
@@ -27,7 +28,8 @@ const Posts = () => {
                 lat: 40.4319,
                 lng: 116.5704
             },
-            creator: 'u2'
+            creator: 'u2',
+            datePosted: '01/02/2021'
         }
     ];
 

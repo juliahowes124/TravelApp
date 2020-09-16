@@ -71,6 +71,7 @@ const PostItem = props => {
                 <div className="post-item__info">
                     <h2>{props.title}</h2>
                     <h3>{props.address}</h3>
+                    <p>Posted: {props.datePosted}</p>
                     <p>{props.caption}</p>
                 </div>
                 <div className="post-item__actions">
