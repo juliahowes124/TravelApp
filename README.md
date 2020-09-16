@@ -19,7 +19,6 @@ Back-end: Node.JS / Express.JS / MongoDB / Mongoose / Postman
 
 ## Feature Demos
 
-### User Registration
-![User Register]()
+### View Place on Map
 
------------------------------------------------------------------------------------------------------------------------------------------------------------------
+![View on Map](https://github.com/juliahowes124/TravelApp/blob/master/view_on_map.gif)
