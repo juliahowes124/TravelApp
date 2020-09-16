@@ -18,16 +18,17 @@ function App() {
   
   const login = useCallback(() => {
     setIsLoggedIn(true);
+    return <Redirect to="/" exact/>
   }, []);
   const logout = useCallback(() => {
     setIsLoggedIn(false);
   }, []);
 
-  return (
-    <AuthContext.Provider value={{ isLoggedIn: isLoggedIn, login: login, logout: logout}}>
-       <Router>
-      <MainNav />
-      <Switch>
+  let routes;
+
+  if (isLoggedIn) {
+    routes = (
+      <React.Fragment>
         <Route path="/" exact>
           <Posts />
         </Route>
@@ -49,13 +50,40 @@ function App() {
         <Route path="/posts/:pid">
           <UpdatePost />
         </Route>
+        <Redirect to="/"/>
+      </React.Fragment>
+        
+
+    );
+  } else {
+    routes = (
+      <React.Fragment>
+        <Route path="/" exact>
+          <Posts />
+        </Route>
+        <Route path="/users" exact>
+          <Users />
+        </Route>
+        <Route path="/:uid/posts" exact>
+          <UserPosts />
+        </Route>
         <Route path="/auth/:authMode">
           <Auth />
         </Route>
-        <Redirect to="/" />
+        <Redirect to="/auth/register"/>
+      </React.Fragment>
+        
+    );
+  }
+
+  return (
+    <AuthContext.Provider value={{ isLoggedIn: isLoggedIn, login: login, logout: logout}}>
+       <Router>
+      <MainNav />
+      <Switch>
+        {routes}
       </Switch>
     </Router>
-
     </AuthContext.Provider>
    
     
