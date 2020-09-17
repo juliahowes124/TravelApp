@@ -9,7 +9,6 @@ router.post('/register',
     [
         check('name').not().isEmpty(),
         check('username').not().isEmpty(),
-        check('email').not().isEmpty(),
         check('password').not().isEmpty()
     ], usersController.register);
 router.post('/login', usersController.login);

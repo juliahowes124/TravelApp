@@ -2,6 +2,9 @@ const HttpError = require('../models/http-error');
 const { v4: uuid } = require('uuid');
 const { validationResult } = require('express-validator');
 const getCoordsForAddress = require('../util/location');
+const User = require('../models/user');
+const Post = require('../models/post');
+const mongoose = require('mongoose');
 
 let DUMMY_POSTS = [
     {
@@ -28,23 +31,35 @@ let DUMMY_POSTS = [
     }
 ];
 
-const getPosts = (req, res, next) => {
-    const posts = DUMMY_POSTS;
-    res.json({posts});
+const getPosts = async (req, res, next) => {
+    let posts;
+    try {
+        posts = await Post.find();
+    } catch(err) {
+        const error = new HttpError('Could not fetch posts.', 500);
+        return next(error);
+    }
+    res.json({posts: posts.map(post => post.toObject({ getters: true }))});
 };
  
-const getPostsByUserId = (req, res, next) => {
+//FIX
+const getPostsByUserId = async (req, res, next) => {
     const userId = req.params.uid;
 
-    const userPlaces = DUMMY_POSTS.filter(p => {
-        return p.creator === userId;
-    })
+    let userWithPosts;
+    try {
+        userWithPosts = await User.findById(userId).populate('posts');
+    } catch (err) {
+        const error = new HttpError('Something went wrong. Could not find user from database', 500);
+        console.log(err);
+        return next(error);
+    }
 
-    if (!userPlaces || userPlaces.length === 0) {
-        return next(new HttpError('Could not find a place for the provided user id.', 404));
+    if (!userWithPosts || userWithPosts.posts.length === 0) {
+        return next(new HttpError('Could not find a post for the provided user id.', 404));
     }
     
-    res.json({userPlaces});
+    res.json({userPost: userWithPosts.posts.map(post => post.toObject({ getters: true}))});
 };
 
 const getLikedPosts = (req, res, next) => {
@@ -64,11 +79,12 @@ const getLikesForPost = (req, res, next) => {
 }
 
 const createPost = async (req, res, next) => {
-    const {title, caption, address, creator} = req.body;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return next(new HttpError('Invalid inputs passed, please check your data', 422));
     }
+
+    const {title, caption, address, creator} = req.body;
 
     let coordinates;
     try {
@@ -77,18 +93,42 @@ const createPost = async (req, res, next) => {
         return next(error);
     }
 
-    const createdPost = {
-        id: uuid(),
+    const createdPost = new Post({
         title,
         caption,
-        location: coordinates,
         address,
+        location: coordinates,
+        image: 'https://cdn.getyourguide.com/img/location/5ca3484e4fa26.jpeg/148.jpg',
         creator
+    });
+
+    let user;
+    try {
+        user = await User.findById(creator);
+    } catch(err) {
+        const error = new HttpError('Creating post failed. Could not retrieve user.', 500);
+        return next(error);
     }
 
-    
+    if (!user){
+        const error = new HttpError('Could not find user for provided id', 404);
+        return next(error);
+    }
 
-    DUMMY_POSTS.push(createdPost);
+    console.log(createdPost);
+
+    try {
+        const sess = await mongoose.startSession();
+        sess.startTransaction();
+        await createdPost.save({ session: sess}); // failed here
+        user.posts.push(createdPost);
+        await user.save({session: sess});
+        await sess.commitTransaction();
+    } catch (err) {
+        const error = new HttpError('Creating post failed', 500);
+        console.log(err);
+        return next(error);
+    }
 
     res.status(201).json({post: createdPost});
 }
@@ -104,14 +144,35 @@ const createLike = async (req, res, next) => {
     res.json({message: "creates a like"});
 }
   
-const deletePost = (req, res, next) => {
+const deletePost = async (req, res, next) => {
     const postId = req.params.pid;
-    if (!DUMMY_POSTS.find(p => p.id === postId)) {
-        throw new HttpError('Could not find a place for that id', 404);
-    }
-    DUMMY_POSTS = DUMMY_POSTS.filter(p => p.id !== postId);
 
-    res.status(200).json({message: 'Deleted place.'});
+    let post;
+    try {
+        post = await Post.findById(postId).populate('creator');
+    } catch (err) {
+        const error = new HttpError('Something went wrong. Could not fetch post to delete.', 500);
+        return next(error);
+    }
+
+    if (!post) {
+        const error = new HttpError('Could not find post for this id', 404);
+        return next(error);
+    }
+
+    try {
+        const sess = await mongoose.startSession();
+        sess.startTransaction();
+        await post.remove({session: sess});
+        post.creator.posts.pull(post);
+        await post.creator.save({session: sess});
+        await sess.commitTransaction();
+    } catch (err) {
+        const error = new HttpError('Something went wrong. Could not delete post.', 500);
+        return next(error);
+    }
+    
+    res.status(200).json({message: 'Deleted post.'});
 
 };
 
@@ -127,24 +188,37 @@ const deleteUserFromLikes = (req, res, next) => {
     res.json({message: 'Deletes user from likes'});
 }
 
-const updatePost = (req, res, next) => {
-    console.log(req.body);
+const updatePost = async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        throw new HttpError('Invalid inputs passed, please check your data', 422);
+        return next(new HttpError('Invalid inputs passed, please check your data', 422));
     }
-    
     const postId = req.params.pid;
-    const postForUpdate = { ...DUMMY_POSTS.find(p => p.id === postId) };
-    const postIndex = DUMMY_POSTS.findIndex(p => p.id === postId);
     const {title, caption, address} = req.body;
-    postForUpdate.title = title;
-    postForUpdate.caption = caption;
-    postForUpdate.address = address;
 
-    DUMMY_POSTS[postIndex] = postForUpdate;
+    let post;
+    try {
+        post = await Post.findById(postId);
+    } catch (err) {
+        const error = new HttpError('Something went wrong. Could not find post in database.', 500);
+    }
 
-    res.status(200).json({post: postForUpdate});
+    if (!post) {
+        return next(new HttpError('Could not find post for this id', 404));
+    }
+
+    post.title = title;
+    post.caption = caption;
+    post.address = address;
+
+    try {
+        await post.save();
+    } catch(err) {
+        const error = new HttpError('Something went wrong. Could not update post.', 500);
+        return next(error);
+    }
+
+    res.status(200).json({post: post.toObject({ getters: true })});
     
 };
 

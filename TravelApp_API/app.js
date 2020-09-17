@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
 const postsRoutes = require('./routes/posts-routes');
 const usersRoutes = require('./routes/users-routes');
@@ -23,6 +24,12 @@ app.use((error, req, res, next) => {
 })
 
 
-
-
-app.listen(5000);
+//FILL THIS IN
+mongoose
+    .connect('mongodb+srv://julia_124:academind123@cluster0.vttcw.mongodb.net/travelapp?retryWrites=true&w=majority')
+    .then(() => {
+        app.listen(5000);
+    })
+    .catch(err => {
+        console.log(err);
+    });
