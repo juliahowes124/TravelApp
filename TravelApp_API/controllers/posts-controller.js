@@ -42,7 +42,6 @@ const getPosts = async (req, res, next) => {
     res.json({posts: posts.map(post => post.toObject({ getters: true }))});
 };
  
-//FIX
 const getPostsByUserId = async (req, res, next) => {
     const userId = req.params.uid;
 

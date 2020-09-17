@@ -15,8 +15,7 @@ router.post('/login', usersController.login);
 router.patch('/:uid', 
     [
         check('name').not().isEmpty(),
-        check('username').not().isEmpty(),
-        check('email').not().isEmpty()
+        check('username').not().isEmpty()
     ], usersController.updateUser);
 
 module.exports = router;
