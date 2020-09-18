@@ -17,7 +17,7 @@ router.post('/',
     postsController.createPost);
 router.post('/:pid/likes', postsController.createLike);
 router.delete('/:pid', postsController.deletePost);
-router.delete('/:pid/likes/:uid', postsController.deleteUserFromLikes);
+router.delete('/:pid/likes', postsController.deleteLike);
 router.patch('/:pid',
     [
         check('title').not().isEmpty(),

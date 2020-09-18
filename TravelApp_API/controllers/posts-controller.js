@@ -4,32 +4,8 @@ const { validationResult } = require('express-validator');
 const getCoordsForAddress = require('../util/location');
 const User = require('../models/user');
 const Post = require('../models/post');
+const Like = require('../models/like');
 const mongoose = require('mongoose');
-
-let DUMMY_POSTS = [
-    {
-        id: 'p1',
-        title: 'Empire State Building',
-        caption: 'famous building',
-        location: {
-            lat: 40.7,
-            lng: -73
-        },
-        address: '123 test st. New York, NY 10001',
-        creator: 'u1'
-    },
-    {
-        id: 'p2',
-        title: 'Empire State Building',
-        caption: 'famous building',
-        location: {
-            lat: 40.7,
-            lng: -73
-        },
-        address: '123 test st. New York, NY 10001',
-        creator: 'u1'
-    }
-];
 
 const getPosts = async (req, res, next) => {
     let posts;
@@ -58,23 +34,39 @@ const getPostsByUserId = async (req, res, next) => {
         return next(new HttpError('Could not find a post for the provided user id.', 404));
     }
     
-    res.json({userPost: userWithPosts.posts.map(post => post.toObject({ getters: true}))});
+    res.json({userPosts: userWithPosts.posts.map(post => post.toObject({ getters: true}))});
 };
 
-const getLikedPosts = (req, res, next) => {
-    res.json({message: "retrieves liked posts"});
+const getLikedPosts = async (req, res, next) => {
+    const userId = '5f63dcd1b03ad90887a9b15b'; //This will be fixed later when I do auth
+
+    let likes;
+    try {
+        likes = await Like.find({user: userId}).populate('post');
+    } catch (err) {
+        const error = new HttpError('Something went wrong. Could not fetch likes.', 500);
+        return next(error);
+    }
+    
+    res.json({likedPosts: likes.map(like => like.post.toObject({ getters: true }))});
 }
 
-const getLikesForPost = (req, res, next) => {
-    const postId = req.params.pid;
-    const post = DUMMY_POSTS.find(p => {
-        return p.id === postId;
-    });
-    if (!post) {
-        return next(new HttpError('Could not find post with provided id', 404));
+const getLikesForPost = async (req, res, next) => {
+    const postId = req.params.pid; //This will be fixed later when I do auth
+
+    let likes;
+    try {
+        likes = await Like.find({post: postId}).populate('user');
+    } catch (err) {
+        const error = new HttpError('Something went wrong. Could not fetch likes.', 500);
+        return next(error);
     }
 
-    res.json({message: "retrieves likes for post"});
+    if (!likes || likes.length === 0) {
+        return next (new HttpError('No likes yet.'))
+    }
+    
+    res.json({likers: likes.map(like => like.user.toObject({ getters: true }))});
 }
 
 const createPost = async (req, res, next) => {
@@ -134,13 +126,23 @@ const createPost = async (req, res, next) => {
 
 const createLike = async (req, res, next) => {
     const postId = req.params.pid;
-    const post = DUMMY_POSTS.find(p => {
-        return p.id === postId;
+    const userId = '5f63dcd1b03ad90887a9b15b'; //This will be fixed later when I do auth
+    
+    //INSERT CHECKING FOR EXISTING POST AND USER
+    //INSERT CHECK IF LIKE ALREADY EXISTS
+
+    const like = new Like({
+        user: userId,
+        post: postId
     });
-    if (!post) {
-        return next(new HttpError('Could not find post with provided id', 404));
+
+    try {
+        await like.save();
+    } catch(err) {
+        const error = new HttpError('Something went wrong. Could not record like for this post.', 500);
     }
-    res.json({message: "creates a like"});
+
+    res.status(201).json({like});
 }
   
 const deletePost = async (req, res, next) => {
@@ -175,16 +177,33 @@ const deletePost = async (req, res, next) => {
 
 };
 
-const deleteUserFromLikes = (req, res, next) => {
+const deleteLike = async (req, res, next) => {
     const postId = req.params.pid;
-    const userId = req.params.uid;
-    const post = DUMMY_POSTS.find(p => {
-        return p.id === postId;
-    });
-    if (!post) {
-        return next(new HttpError('Could not find post with provided id', 404));
+    const userId = '5f63dcd1b03ad90887a9b15b'; //This will be fixed later when I do auth
+
+    let like;
+    try {
+        like = await Like.findOne({post: postId});
+    } catch (err) {
+        const error = new HttpError('Something went wrong. Could not fetch like to delete.', 500);
+        return next(error);
     }
-    res.json({message: 'Deletes user from likes'});
+
+    if (!like) {
+        const error = new HttpError('Could not find like for the given post id', 404);
+        return next(error);
+    }
+
+    try {
+        console.log(like);
+        await like.remove();
+    } catch (err) {
+        const error = new HttpError('Something went wrong. Could not delete like.', 500);
+        console.log(err);
+        return next(error);
+    }
+    
+    res.status(200).json({message: 'Deleted like.'});
 }
 
 const updatePost = async (req, res, next) => {
@@ -228,5 +247,5 @@ exports.getLikesForPost = getLikesForPost;
 exports.createPost = createPost;
 exports.createLike = createLike;
 exports.deletePost = deletePost;
-exports.deleteUserFromLikes = deleteUserFromLikes;
+exports.deleteLike = deleteLike;
 exports.updatePost = updatePost;
