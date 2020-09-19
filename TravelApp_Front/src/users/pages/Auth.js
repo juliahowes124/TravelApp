@@ -5,6 +5,8 @@ import { useContext, useState } from 'react';
 import Input from '../../shared/components/FormElements/Input';
 import Button from '../../shared/components/FormElements/Button';
 import Card from '../../shared/components/UIElements/Card';
+import ErrorModal from '../../shared/components/UIElements/ErrorModal';
+import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import { VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE, VALIDATOR_EMAIL } from '../../shared/util/validators';
 import { useForm } from '../../shared/hooks/form-hook';
 import { AuthContext } from '../../shared/context/auth-context';
@@ -12,9 +14,11 @@ import './Auth.css';
 
 const Auth = () => {
     const authMode = useParams().authMode;
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
     const auth = useContext(AuthContext);
     const [formState, inputHandler, setFormData] = useForm({
-        email: {
+        username: {
             value: '',
             isValid: false
         },
@@ -29,7 +33,7 @@ const Auth = () => {
             setFormData({
                 ...formState.inputs,
                 name: undefined
-            }, formState.inputs.email.isValid && formState.inputs.password.isValid);
+            }, formState.inputs.username.isValid && formState.inputs.password.isValid);
         } else {
             setFormData({
                 ...formState.inputs,
@@ -41,18 +45,52 @@ const Auth = () => {
         }
     }, [authMode]);
 
-    const authSubmitHandler = event => {
+    const authSubmitHandler = async event => {
         event.preventDefault();
-        console.log(formState.inputs);
+
         if (authMode === 'login') {
             console.log('Logged In!')
         } else {
-            console.log('Registration successful!')
+            try {
+                setIsLoading(true);
+                const response = await fetch('http://localhost:5000/api/users/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: formState.inputs.name.value,
+                        username: formState.inputs.username.value,
+                        password: formState.inputs.password.value
+                    })
+                });
+
+                const responseData = await response.json();
+                if (!response.ok) {
+                    console.log('error occured');
+                    throw new Error(responseData.message);
+                }
+
+                console.log(responseData);
+                setIsLoading(false);
+                auth.login();
+            } catch (err) {
+                console.log(err);
+                setIsLoading(false);
+                setError(err.message || 'Something went wrong, please try again.');
+            } 
         }
-        auth.login();
+    };
+
+    const errorHandler = () => {
+        setError(null);
     }
+
     return (
-        <Card className="auth">
+        <React.Fragment>
+            {error !== null && (<ErrorModal error={error} onClear={errorHandler} />)}
+            <Card className="auth">
+            {isLoading && <LoadingSpinner asOverlay/>}
             <h2>{authMode==='login' ? 'LOGIN' : 'REGISTER'}</h2>
             <hr />
             <form onSubmit={authSubmitHandler}>
@@ -70,11 +108,11 @@ const Auth = () => {
                 
                 <Input
                     element="input"
-                    id="email"
-                    type="email"
-                    label="Email"
-                    validators={[VALIDATOR_EMAIL()]}
-                    errorText="Please enter a valid email address."
+                    id="username"
+                    type="username"
+                    label="Username"
+                    validators={[VALIDATOR_REQUIRE()]}
+                    errorText="Please enter a username."
                     onInput={inputHandler}
                 />
                 <Input
@@ -96,6 +134,9 @@ const Auth = () => {
                 <Button type="submit" disabled={!formState.isValid}>{authMode==='login' ? 'LOGIN' : 'REGISTER'}</Button>
             </form>
         </Card>
+
+        </React.Fragment>
+        
         
     ) 
 };
