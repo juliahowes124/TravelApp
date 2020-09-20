@@ -17,7 +17,6 @@ const getUsers = async (req, res, next) => {
 const register = async (req, res, next) => {
     const errors = validationResult(req);
     if(!errors.isEmpty()) {
-        console.log('hello4');
         return next(new HttpError('Invalid inputs passed, please check your data.', 422)); 
     }
 
@@ -38,7 +37,7 @@ const register = async (req, res, next) => {
     const createdUser = new User({
         name,
         username,
-        image: 'https://m.media-amazon.com/images/M/MV5BMTkxMzk4MjQ4MF5BMl5BanBnXkFtZTcwMzExODQxOA@@._V1_UY1200_CR84,0,630,1200_AL_.jpg',
+        image: req.file.path,
         password,
         posts: []
     });

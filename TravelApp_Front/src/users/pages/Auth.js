@@ -7,6 +7,7 @@ import Button from '../../shared/components/FormElements/Button';
 import Card from '../../shared/components/UIElements/Card';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
+import ImageUpload from '../../shared/components/FormElements/ImageUpload';
 import { VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE, VALIDATOR_EMAIL } from '../../shared/util/validators';
 import { useForm } from '../../shared/hooks/form-hook';
 import { useHttpClient } from '../../shared/hooks/http-hook';
@@ -32,13 +33,18 @@ const Auth = () => {
         if (authMode === 'login') {
             setFormData({
                 ...formState.inputs,
-                name: undefined
+                name: undefined,
+                image: undefined
             }, formState.inputs.username.isValid && formState.inputs.password.isValid);
         } else {
             setFormData({
                 ...formState.inputs,
                 name: {
                     value: '',
+                    isValid: false
+                },
+                image: {
+                    value: null,
                     isValid: false
                 }
             }, false);
@@ -48,6 +54,8 @@ const Auth = () => {
     const authSubmitHandler = async event => {
         event.preventDefault();
 
+        
+        
         if (authMode === 'login') {
             try {
                 const responseData = await sendRequest(
@@ -65,15 +73,15 @@ const Auth = () => {
             
         } else {
             try {
+                const formData = new FormData();
+                formData.append('name', formState.inputs.name.value);
+                formData.append('username', formState.inputs.username.value);
+                formData.append('password', formState.inputs.password.value);
+                formData.append('image', formState.inputs.image.value);
                 const responseData = await sendRequest(
                     'http://localhost:5000/api/users/register',
                     'POST',
-                    JSON.stringify({
-                        name: formState.inputs.name.value,
-                        username: formState.inputs.username.value,
-                        password: formState.inputs.password.value
-                    }),
-                    {'Content-Type': 'application/json'}
+                    formData
                 );
                 auth.login(responseData.user.id);
             } catch (err) {} 
@@ -99,7 +107,7 @@ const Auth = () => {
                     onInput={inputHandler}
                 />
                 )}
-                
+                {authMode === 'register' && <ImageUpload center id="image" onInput={inputHandler} errorText="Please provide an image"/>}
                 <Input
                     element="input"
                     id="username"

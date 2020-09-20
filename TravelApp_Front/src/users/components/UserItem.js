@@ -11,7 +11,7 @@ const UserItem = props => {
         <li className="user-item">
                 <Card className="user-item__content">
                 <div className="user-item__image">
-                    <Avatar image={props.image} name={props.name} />
+                    <Avatar image={`http://localhost:5000/${props.image}`} name={props.name} />
                 </div>
                 <div className="user-item__info">
                     <h2>{props.name}</h2>

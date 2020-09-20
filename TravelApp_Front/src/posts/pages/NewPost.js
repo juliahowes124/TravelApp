@@ -6,6 +6,7 @@ import Card from '../../shared/components/UIElements/Card';
 import Button from '../../shared/components/FormElements/Button';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
+import ImageUpload from '../../shared/components/FormElements/ImageUpload';
 
 import { VALIDATOR_REQUIRE } from '../../shared/util/validators';
 import { useForm } from '../../shared/hooks/form-hook';
@@ -90,6 +91,7 @@ const NewPost = () => {
                     errorText="Please enter a valid address."
                     onInput={inputHandler}
                 />
+                <ImageUpload id="image" onInput={inputHandler} errorText="Please provide an image" />
                 <Button type="submit" disabled={!formState.isValid}>Post</Button>
             </form>
             </Card>
