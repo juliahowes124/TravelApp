@@ -71,6 +71,7 @@ const getLikesForPost = async (req, res, next) => {
 
 const createPost = async (req, res, next) => {
     const errors = validationResult(req);
+    console.log(req);
     if (!errors.isEmpty()) {
         return next(new HttpError('Invalid inputs passed, please check your data', 422));
     }
@@ -209,6 +210,7 @@ const deleteLike = async (req, res, next) => {
 const updatePost = async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+        console.log('hello2');
         return next(new HttpError('Invalid inputs passed, please check your data', 422));
     }
     const postId = req.params.pid;

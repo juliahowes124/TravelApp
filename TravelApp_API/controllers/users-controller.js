@@ -17,6 +17,7 @@ const getUsers = async (req, res, next) => {
 const register = async (req, res, next) => {
     const errors = validationResult(req);
     if(!errors.isEmpty()) {
+        console.log('hello4');
         return next(new HttpError('Invalid inputs passed, please check your data.', 422)); 
     }
 
@@ -68,13 +69,13 @@ const login = async (req, res, next) => {
         return next(error);
     }
 
-    res.json({message: 'Logged In'});
+    res.json({message: 'Logged In', user: existingUser.toObject({ getters: true})});
 };
 
 const updateUser = async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        console.log(errors);
+        console.log('hello3');
         return next(new HttpError('Invalid inputs passed, please check your data', 422));
     }
 

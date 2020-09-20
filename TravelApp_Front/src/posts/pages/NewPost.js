@@ -1,13 +1,21 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import Input from '../../shared/components/FormElements/Input';
 import Card from '../../shared/components/UIElements/Card';
 import Button from '../../shared/components/FormElements/Button';
+import ErrorModal from '../../shared/components/UIElements/ErrorModal';
+import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
+
 import { VALIDATOR_REQUIRE } from '../../shared/util/validators';
 import { useForm } from '../../shared/hooks/form-hook';
+import { useHttpClient } from '../../shared/hooks/http-hook';
+import { AuthContext } from '../../shared/context/auth-context';
 import './NewPost.css';
 
 const NewPost = () => {
+    const auth = useContext(AuthContext);
+    const { isLoading, error, sendRequest, clearError} = useHttpClient();
 
     const [formState, inputHandler, setFormData] = useForm({
         title: {
@@ -24,16 +32,37 @@ const NewPost = () => {
         }
     }, false); //title, caption, address are initialInputs; false is initialValidity
 
-    const postSubmitHandler = event => {
+    const history = useHistory();
+
+    const postSubmitHandler = async event => {
         event.preventDefault();
-        console.log(formState.inputs);
+        try {
+            console.log(JSON.stringify({
+                title: formState.inputs.title.value,
+                caption: formState.inputs.caption.value,
+                address: formState.inputs.address.value,
+                creator: auth.userId
+            }));
+            await sendRequest('http://localhost:5000/api/posts', 'POST', JSON.stringify({
+                title: formState.inputs.title.value,
+                caption: formState.inputs.caption.value,
+                address: formState.inputs.address.value,
+                creator: auth.userId
+            }), {'Content-Type': 'application/json'});
+
+            history.push('/');
+        } catch (err) {
+        }
     }
 
     return (
-        <Card className="new-post">
+        <React.Fragment>
+            {error !== null && <ErrorModal error={error} onClear={clearError} />}
+            <Card className="new-post">
             <h2>New Post</h2>
             <hr />
             <form className="post-form" onSubmit={postSubmitHandler}>
+                {isLoading && <LoadingSpinner asOverlay />}
                 <Input
                     element="input"
                     id="title"
@@ -63,7 +92,9 @@ const NewPost = () => {
                 />
                 <Button type="submit" disabled={!formState.isValid}>Post</Button>
             </form>
-        </Card>
+            </Card>
+        </React.Fragment>
+        
         
     ) 
 };
