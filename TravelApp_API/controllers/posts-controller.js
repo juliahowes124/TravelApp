@@ -1,3 +1,4 @@
+const fs = require('fs');
 const HttpError = require('../models/http-error');
 const { v4: uuid } = require('uuid');
 const { validationResult } = require('express-validator');
@@ -101,7 +102,7 @@ const createPost = async (req, res, next) => {
         caption,
         address,
         location: coordinates,
-        image: 'https://cdn.getyourguide.com/img/location/5ca3484e4fa26.jpeg/148.jpg',
+        image: req.file.path,
         creator
     });
 
@@ -173,6 +174,8 @@ const deletePost = async (req, res, next) => {
         return next(error);
     }
 
+    const imagePath = post.image;
+
     try {
         const sess = await mongoose.startSession();
         sess.startTransaction();
@@ -184,6 +187,10 @@ const deletePost = async (req, res, next) => {
         const error = new HttpError('Something went wrong. Could not delete post.', 500);
         return next(error);
     }
+
+    fs.unlink(imagePath, err => {
+        console.log(err);
+    });
     
     res.status(200).json({message: 'Deleted post.'});
 

@@ -30,6 +30,10 @@ const NewPost = () => {
         address: {
             value: '',
             isValid: false
+        },
+        image: {
+            value: null,
+            isValid: false
         }
     }, false); //title, caption, address are initialInputs; false is initialValidity
 
@@ -38,19 +42,14 @@ const NewPost = () => {
     const postSubmitHandler = async event => {
         event.preventDefault();
         try {
-            console.log(JSON.stringify({
-                title: formState.inputs.title.value,
-                caption: formState.inputs.caption.value,
-                address: formState.inputs.address.value,
-                creator: auth.userId
-            }));
-            await sendRequest('http://localhost:5000/api/posts', 'POST', JSON.stringify({
-                title: formState.inputs.title.value,
-                caption: formState.inputs.caption.value,
-                address: formState.inputs.address.value,
-                creator: auth.userId
-            }), {'Content-Type': 'application/json'});
-
+            const formData = new FormData();
+            formData.append('title', formState.inputs.title.value );
+            formData.append('caption', formState.inputs.caption.value );
+            formData.append('address', formState.inputs.address.value );
+            formData.append('creator', auth.userId );
+            formData.append('image', formState.inputs.image.value);
+            
+            await sendRequest('http://localhost:5000/api/posts', 'POST', formData);
             history.push('/');
         } catch (err) {
         }

@@ -1,6 +1,7 @@
 const express = require('express');
 const { check } = require('express-validator');
 const postsController = require('../controllers/posts-controller');
+const fileUpload = require('../middleware/file-upload');
 
 const router = express.Router();
 
@@ -10,6 +11,7 @@ router.get('/user/:uid', postsController.getPostsByUserId);
 router.get('/liked', postsController.getLikedPosts);
 router.get('/:pid/likes', postsController.getLikesForPost);
 router.post('/', 
+    fileUpload.single('image'),
     [
         check('title').not().isEmpty(),
         check('caption').not().isEmpty(),
