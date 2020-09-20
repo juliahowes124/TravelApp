@@ -37,7 +37,7 @@ const register = async (req, res, next) => {
     const createdUser = new User({
         name,
         username,
-        image: 'https://live.staticflickr.com/7631/26849088292_36fc52ee90_b.jpg',
+        image: 'https://m.media-amazon.com/images/M/MV5BMTkxMzk4MjQ4MF5BMl5BanBnXkFtZTcwMzExODQxOA@@._V1_UY1200_CR84,0,630,1200_AL_.jpg',
         password,
         posts: []
     });
