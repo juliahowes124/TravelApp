@@ -114,8 +114,8 @@ const Auth = () => {
                     element="input"
                     type="password"
                     label="Password"
-                    validators={[VALIDATOR_MINLENGTH(3)]}
-                    errorText="Password must be at least 3 characters long."
+                    validators={[VALIDATOR_MINLENGTH(6)]}
+                    errorText="Password must be at least 6 characters long."
                     onInput={inputHandler}
                 />
                 {authMode==='register' && (

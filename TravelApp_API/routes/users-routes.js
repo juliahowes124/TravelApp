@@ -9,7 +9,7 @@ router.post('/register',
     [
         check('name').not().isEmpty(),
         check('username').not().isEmpty(),
-        check('password').not().isEmpty()
+        check('password').isLength({min: 6})
     ], usersController.register);
 router.post('/login', usersController.login);
 router.patch('/:uid', 

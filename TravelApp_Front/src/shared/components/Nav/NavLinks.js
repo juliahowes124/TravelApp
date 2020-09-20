@@ -17,13 +17,13 @@ const NavLinks = () => {
     {auth.isLoggedIn && (
         <React.Fragment>
             <li>
-                <NavLink to="/u1/posts">MY POSTS</NavLink>
+                <NavLink to={`/${auth.userId}/posts`}>MY POSTS</NavLink>
             </li>
             <li>
                 <NavLink to="/new">NEW POST</NavLink>
             </li>
             <li>
-                <NavLink to="/u1/likes">LIKED POSTS</NavLink>
+                <NavLink to={`/${auth.userId}/likes`}>LIKED POSTS</NavLink>
             </li>
         </React.Fragment>
     )}

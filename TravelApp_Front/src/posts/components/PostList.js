@@ -7,10 +7,6 @@ const PostList = props => {
     return (
     <ul className="posts-list">
         {props.items
-        .sort((a,b) => {
-            return new Date(a.datePosted).getTime() - 
-                new Date(b.datePosted).getTime()
-        }).reverse()
         .map(post => (
             <PostItem 
                 key={post.id}
@@ -28,6 +24,11 @@ const PostList = props => {
         ))}
     </ul>
     )
+
+    // .sort((a,b) => {
+    //     return new Date(a.datePosted).getTime() - 
+    //         new Date(b.datePosted).getTime()
+    // }).reverse()
 
 };
 

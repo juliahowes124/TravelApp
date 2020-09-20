@@ -1,40 +1,34 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
+import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
+import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import PostList from '../components/PostList';
+import { useHttpClient } from '../../shared/hooks/http-hook';
 
 const Posts = () => {
 
-    const POSTS = [
-        {
-            id: 'p1',
-            title: 'Empire State Building',
-            caption: 'One of the most famous sky scrapers in the world!',
-            imageUrl: 'https://cdn.getyourguide.com/img/location/5ca3484e4fa26.jpeg/148.jpg',
-            address: '20 W 34th St, New York, NY 10001',
-            location: {
-                lat: 40.7484,
-                lng: -73.9857
-            },
-            creator: 'u1',
-            datePosted: '01/01/2021'
-        },
-        {
-            id: 'p2',
-            title: 'Great Wall of China',
-            caption: 'A big wall!',
-            imageUrl: 'https://www.snopes.com/tachyon/2018/07/great_wall_of_china.jpg?resize=865,452',
-            address: 'Huairou District, China',
-            location: {
-                lat: 40.4319,
-                lng: 116.5704
-            },
-            creator: 'u2',
-            datePosted: '01/02/2021'
-        }
-    ];
+    const [loadedPosts, setLoadedPosts] = useState();
+    const { isLoading, error, sendRequest, clearError } = useHttpClient();
+
+    useEffect(() => {
+        const fetchPosts = async () => {
+            try {
+                const responseData = await sendRequest(`http://localhost:5000/api/posts`);
+                setLoadedPosts(responseData.posts);
+            } catch (err) {}
+        };
+        fetchPosts();
+    }, [sendRequest]);
 
     return (
-        <PostList items={POSTS} />
+        <React.Fragment>
+            <div className="center">
+                {isLoading && <LoadingSpinner/>}
+            </div>
+            {error !== null && <ErrorModal error={error} onClear={clearError}/>}
+            {loadedPosts && <PostList items={loadedPosts} />}
+        </React.Fragment>
+        
     )
 
 };

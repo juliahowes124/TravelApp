@@ -84,14 +84,14 @@ const PostItem = props => {
                 </div>
                 <div className="post-item__actions">
                     <Button onClick={showMapHandler}>VIEW ON MAP</Button>
-                    {!props.isUserPosts && (
+                    {auth.isLoggedIn && auth.userId !== props.creatorId && <Button to={'/u1/likes'}>LIKE</Button>}
+                    {!props.isUserPosts && auth.userId !== props.creatorId && (
                         <Button to={`/${props.creatorId}/posts`}>VIEW USER</Button>
                     )}
-                    {auth.isLoggedIn && (
+                    {auth.userId === props.creatorId && (
                         <React.Fragment>
                             <Button inverse to={`/posts/${props.id}`}>EDIT</Button>
                             <Button inverse onClick={showDeleteWarningHandler} danger>DELETE</Button>
-                            <Button to={'/u1/likes'}>LIKE</Button>
                         </React.Fragment>
                     )}
                     {!auth.isLoggedIn && (
