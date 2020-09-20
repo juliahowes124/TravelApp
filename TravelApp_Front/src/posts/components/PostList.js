@@ -15,7 +15,7 @@ const PostList = props => {
             <PostItem 
                 key={post.id}
                 id={post.id}
-                image={post.imageUrl}
+                image={post.image}
                 title={post.title}
                 caption={post.caption}
                 address={post.address}
@@ -23,6 +23,7 @@ const PostList = props => {
                 coordinates={post.location}
                 datePosted={post.datePosted}
                 isUserPosts={props.isUserPosts}
+                onDelete={props.onDeletePost}
             />
         ))}
     </ul>

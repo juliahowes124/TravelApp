@@ -5,10 +5,14 @@ import Card from '../../shared/components/UIElements/Card';
 import Button from '../../shared/components/FormElements/Button';
 import Modal from '../../shared/components/UIElements/Modal';
 import Map from '../../shared/components/UIElements/Map';
+import ErrorModal from '../../shared/components/UIElements/ErrorModal';
+import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import { AuthContext } from '../../shared/context/auth-context';
+import { useHttpClient } from '../../shared/hooks/http-hook';
 import './PostItem.css';
 
 const PostItem = props => {
+    const { isLoading, error, sendRequest, clearError } = useHttpClient();
     const auth = useContext(AuthContext);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [showMapModal, setShowMapModal] = useState(false);
@@ -20,10 +24,13 @@ const PostItem = props => {
     const cancelDeleteHandler = () => {
         setShowConfirmModal(false);
     };
-    const confirmDeleteHandler = () => {
+    const confirmDeleteHandler = async () => {
         setShowConfirmModal(false);
-        console.log("DELETING...");
-    }
+        try {
+            await sendRequest(`http://localhost:5000/api/posts/${props.id}`,'DELETE');
+            props.onDelete(props.id);
+        } catch (err) {}
+    };
     const showMapHandler = () => {
         setShowMapModal(true);
     }
@@ -33,7 +40,7 @@ const PostItem = props => {
 
     return (
         <React.Fragment>
-
+        {error !== null && <ErrorModal error={error} onClear={clearError} />}
         {showMapModal && 
             <Modal
                 header={props.address}
@@ -65,6 +72,7 @@ const PostItem = props => {
             
         <li className="post-item">
             <Card className="post-item__content">
+                {isLoading && <LoadingSpinner asOverlay />}
                 <div className="post-item__image">
                     <img src={props.image} alt={props.title} />
                 </div>

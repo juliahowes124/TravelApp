@@ -1,44 +1,23 @@
-import React, {useEffect, useState} from 'react';
-import { useParams } from 'react-router-dom';
+import React, {useEffect, useState, useContext} from 'react';
+import { useParams, useHistory } from 'react-router-dom';
 
 import Input from '../../shared/components/FormElements/Input';
 import Card from '../../shared/components/UIElements/Card';
 import Button from '../../shared/components/FormElements/Button';
+import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
+import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import { VALIDATOR_REQUIRE } from '../../shared/util/validators';
 import { useForm } from '../../shared/hooks/form-hook';
-
+import { useHttpClient } from '../../shared/hooks/http-hook';
+import { AuthContext } from '../../shared/context/auth-context';
 import './UpdatePost.css';
 
-const POSTS = [
-    {
-        id: 'p1',
-        title: 'Empire State Building',
-        caption: 'One of the most famous sky scrapers in the world!',
-        imageUrl: 'https://cdn.getyourguide.com/img/location/5ca3484e4fa26.jpeg/148.jpg',
-        address: '20 W 34th St, New York, NY 10001',
-        location: {
-            lat: 40.7484,
-            lng: -73.9857
-        },
-        creator: 'u1'
-    },
-    {
-        id: 'p2',
-        title: 'Great Wall of China',
-        caption: 'A big wall!',
-        imageUrl: 'https://www.snopes.com/tachyon/2018/07/great_wall_of_china.jpg?resize=865,452',
-        address: 'Huairou District, China',
-        location: {
-            lat: 40.4319,
-            lng: 116.5704
-        },
-        creator: 'u2'
-    }
-];
-
 const UpdatePost = () => {
-    const [isLoading, setIsLoading] = useState(true);
+    const { isLoading, error, sendRequest, clearError} = useHttpClient();
+    const [loadedPost, setLoadedPost] = useState();
     const postId = useParams().pid;
+    const history = useHistory();
+    const auth = useContext(AuthContext);
 
     const [formState, inputHandler, setFormData] = useForm({
         title: {
@@ -55,33 +34,59 @@ const UpdatePost = () => {
         }
     }, false);
 
-    const postSubmitHandler = event => {
+    const postSubmitHandler = async event => {
         event.preventDefault();
-        console.log(formState.inputs);
+        try {
+            await sendRequest(`http://localhost:5000/api/posts/${postId}`,
+            'PATCH',
+            JSON.stringify({
+            title: formState.inputs.title.value,
+            caption: formState.inputs.caption.value,
+            address: formState.inputs.address.value 
+            }),
+            {
+                'Content-Type': 'application/json'
+            });
+            history.push('/' + auth.userId + '/posts') ;
+        } catch (err) {}
+        
+        
+    };
+
+    useEffect(() => {
+        const fetchPost = async () => {
+            try {
+                const responseData = await sendRequest(`http://localhost:5000/api/posts/${postId}`);
+                setLoadedPost(responseData.post);
+                setFormData({
+                    title: {
+                        value: responseData.post.title,
+                        isValid: true
+                    },
+                    caption: {
+                        value: responseData.post.caption,
+                        isValid: true
+                    },
+                    address: {
+                        value: responseData.post.address,
+                        isValid: true
+                    }
+                })
+            
+        } catch(err) {}
+    };
+    fetchPost();
+    }, [sendRequest, postId, setFormData]);
+
+    if (isLoading) {
+        return (
+            <div className="center">
+                <LoadingSpinner />
+            </div>
+        )
     }
 
-    const identifiedPlace = POSTS.find(p => p.id  === postId);
-    useEffect(() => {
-        if (identifiedPlace) {
-            setFormData({
-                title: {
-                    value: identifiedPlace.title,
-                    isValid: true
-                },
-                caption: {
-                    value: identifiedPlace.caption,
-                    isValid: true
-                },
-                address: {
-                    value: identifiedPlace.address,
-                    isValid: true
-                }
-            }, true);
-        }
-        setIsLoading(false);
-    }, [setFormData, identifiedPlace]);
-
-    if (!identifiedPlace) {
+    if (!loadedPost && error !== null) {
         return (
             <div className="center">
                 <Card><h2>Could not find place</h2></Card>
@@ -89,19 +94,13 @@ const UpdatePost = () => {
         )
     }
 
-    if (isLoading) {
-        return (
-            <div className="center">
-                <h2>Loading...</h2>
-            </div>
-        )
-    }
-
     return (
+        <React.Fragment>
+        {error !== null && <ErrorModal error={error} onClear={clearError} />} 
         <Card className="update-post">
             <h2>Edit Post</h2>
             <hr />
-            <form className="place-form" onSubmit={postSubmitHandler}>
+            {!isLoading && loadedPost && (<form className="place-form" onSubmit={postSubmitHandler}>
                 <Input
                     element="input"
                     id="title"
@@ -110,8 +109,8 @@ const UpdatePost = () => {
                     validators={[VALIDATOR_REQUIRE()]}
                     errorText="Title is required."
                     onInput={inputHandler}
-                    initialValue={formState.inputs.title.value}
-                    initialValid={formState.inputs.title.isValid}
+                    initialValue={loadedPost.title}
+                    initialValid={true}
                 />
                 <Input
                     element="input"
@@ -121,8 +120,8 @@ const UpdatePost = () => {
                     validators={[VALIDATOR_REQUIRE()]}
                     errorText="Caption is required."
                     onInput={inputHandler}
-                    initialValue={formState.inputs.caption.value}
-                    initialValid={formState.inputs.caption.isValid}
+                    initialValue={loadedPost.caption}
+                    initialValid={true}
                 />
                 <Input
                     element="input"
@@ -132,12 +131,14 @@ const UpdatePost = () => {
                     validators={[VALIDATOR_REQUIRE()]}
                     errorText="Address is required."
                     onInput={inputHandler}
-                    initialValue={formState.inputs.address.value}
-                    initialValid={formState.inputs.address.isValid}
+                    initialValue={loadedPost.address}
+                    initialValid={true}
                 />
                 <Button type="submit" disabled={!formState.isValid}>Update</Button>
-            </form>
+            </form>)}
         </Card>
+        </React.Fragment>
+       
     )
 };
 

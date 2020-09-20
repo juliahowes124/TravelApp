@@ -5,6 +5,7 @@ const postsController = require('../controllers/posts-controller');
 const router = express.Router();
 
 router.get('/', postsController.getPosts);
+router.get('/:pid', postsController.getPostById);
 router.get('/user/:uid', postsController.getPostsByUserId);
 router.get('/liked', postsController.getLikedPosts);
 router.get('/:pid/likes', postsController.getLikesForPost);

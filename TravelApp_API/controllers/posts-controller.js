@@ -7,6 +7,17 @@ const Post = require('../models/post');
 const Like = require('../models/like');
 const mongoose = require('mongoose');
 
+const getPostById = async (req, res, next) => {
+    const postId = req.params.pid;
+    let post;
+    try {
+        post = await Post.findById(postId);
+    } catch (err) {
+        const error = new HttpError('Could not fetch post.', 500);
+        return next(error);
+    }
+    res.json({post: post.toObject({ getters: true})});
+}
 const getPosts = async (req, res, next) => {
     let posts;
     try {
@@ -243,6 +254,7 @@ const updatePost = async (req, res, next) => {
 };
 
 exports.getPosts = getPosts;
+exports.getPostById = getPostById;
 exports.getPostsByUserId = getPostsByUserId;
 exports.getLikedPosts = getLikedPosts;
 exports.getLikesForPost = getLikesForPost;

@@ -1,62 +1,34 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 import PostList from '../components/PostList';
+import ErrorModal from '../../shared/components/UIElements/ErrorModal';
+import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import Card from '../../shared/components/UIElements/Card';
+import { useHttpClient } from '../../shared/hooks/http-hook';
 import './UserPosts.css';
 
-const POSTS = [
-    {
-        id: 'p1',
-        title: 'Empire State Building',
-        caption: 'One of the most famous sky scrapers in the world!',
-        imageUrl: 'https://cdn.getyourguide.com/img/location/5ca3484e4fa26.jpeg/148.jpg',
-        address: '20 W 34th St, New York, NY 10001',
-        location: {
-            lat: 40.7484,
-            lng: -73.9857
-        },
-        creator: 'u1',
-        datePosted: '01/01/2021'
-    },
-    {
-        id: 'p2',
-        title: 'Great Wall of China',
-        caption: 'A big wall!',
-        imageUrl: 'https://www.snopes.com/tachyon/2018/07/great_wall_of_china.jpg?resize=865,452',
-        address: 'Huairou District, China',
-        location: {
-            lat: 40.4319,
-            lng: 116.5704
-        },
-        creator: 'u2',
-        datePosted: '01/02/2021'
-    }
-];
-
-const USERS = [
-    {
-        id: 'u1',
-        username: '@julia123',
-        name: 'Julia Howes',
-        image: 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg',
-        posts: 3
-    },
-    {
-        id: 'u2',
-        username: '@neil123',
-        name: 'Neil Schultz-Cox',
-        image: 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg',
-        posts: 2
-    }
-];
 
 const UserPosts = () => {
+    const [loadedPosts, setLoadedPosts] = useState();
+    const { isLoading, error, sendRequest, clearError } = useHttpClient();
     const userId = useParams().uid;
-    const user = USERS.find(u => u.id === userId);
-    const userPosts = POSTS.filter(post => post.creator === userId);
 
-    if (userPosts.length === 0) {
+    useEffect(() => {
+        const fetchPosts = async () => {
+            try {
+                const responseData = await sendRequest(`http://localhost:5000/api/posts/user/${userId}`);
+                setLoadedPosts(responseData.userPosts);
+            } catch (err) {}
+        };
+        fetchPosts();
+    }, [sendRequest, userId]);
+
+    const postDeletedHandler = deletedPostId => {
+        setLoadedPosts(prevPosts => prevPosts.filter(post => post.id !== deletedPostId));
+    }
+
+    if (!loadedPosts) {
         return (
             <React.Fragment>
                 <Card className="no-places">This user has no posts.</Card>
@@ -67,7 +39,7 @@ const UserPosts = () => {
     }
     return (
         <React.Fragment>
-            <div className="user-posts__user-info">
+            {/* <div className="user-posts__user-info">
                 <img src={user.image} alt=""/>
                 <div className="user-posts__user-details">
                     <h2>{user.name}</h2>
@@ -77,8 +49,10 @@ const UserPosts = () => {
                 
                 
                 
-            </div>
-            <PostList isUserPosts="true" items={userPosts} />
+            </div> */}
+            {error !== null && <ErrorModal error={error} onClear={clearError}/>}
+            {isLoading && <div className="center"><LoadingSpinner/></div>}
+            {!isLoading && loadedPosts && <PostList isUserPosts="true" items={loadedPosts} onDeletePost={postDeletedHandler} />}
         </React.Fragment>
        
         
