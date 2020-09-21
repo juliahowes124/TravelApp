@@ -26,6 +26,15 @@ Back-End: Node.JS / Express.JS / MongoDB / Mongoose / Postman
 ### User Registration
 
 ![User Registration](https://github.com/juliahowes124/TravelApp/blob/master/Demos/register.gif)
+### Create New Post
+
+![Create Post](https://github.com/juliahowes124/TravelApp/blob/master/Demos/create_post.gif)
+### Update Post
+
+![Update Post](https://github.com/juliahowes124/TravelApp/blob/master/Demos/update_post.gif)
+### Delete Post
+
+![Delete Post](https://github.com/juliahowes124/TravelApp/blob/master/Demos/delete_post.gif)
 ### View Place on Map
 
 ![View on Map](https://github.com/juliahowes124/TravelApp/blob/master/Demos/view_on_map.gif)
