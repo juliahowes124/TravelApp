@@ -107,7 +107,7 @@ const Auth = () => {
                     onInput={inputHandler}
                 />
                 )}
-                {authMode === 'register' && <ImageUpload center id="image" onInput={inputHandler} errorText="Please provide an image"/>}
+                {authMode === 'register' && <ImageUpload center id="image" onInput={inputHandler}/>}
                 <Input
                     element="input"
                     id="username"

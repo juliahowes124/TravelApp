@@ -11,7 +11,8 @@ const postSchema = new Schema({
         lat: { type: Number, required: true },
         lng: { type: Number, required: true }
     },
-    creator: { type: mongoose.Types.ObjectId, require: true, ref: 'User'}
+    creator: { type: mongoose.Types.ObjectId, require: true, ref: 'User'},
+    dateCreated: { type: Date, required: true}
 });
 
 module.exports = mongoose.model('Post', postSchema);

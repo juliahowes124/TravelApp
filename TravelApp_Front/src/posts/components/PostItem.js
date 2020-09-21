@@ -1,5 +1,10 @@
 import React from 'react';
 import { useState, useContext } from 'react';
+import ReactTimeAgo from 'react-time-ago';
+import JavascriptTimeAgo from 'javascript-time-ago';
+ 
+import en from 'javascript-time-ago/locale/en';
+import ru from 'javascript-time-ago/locale/ru';
 
 import Card from '../../shared/components/UIElements/Card';
 import Button from '../../shared/components/FormElements/Button';
@@ -10,6 +15,9 @@ import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import { AuthContext } from '../../shared/context/auth-context';
 import { useHttpClient } from '../../shared/hooks/http-hook';
 import './PostItem.css';
+
+JavascriptTimeAgo.addLocale(en)
+JavascriptTimeAgo.addLocale(ru)
 
 const PostItem = props => {
     const { isLoading, error, sendRequest, clearError } = useHttpClient();
@@ -79,7 +87,7 @@ const PostItem = props => {
                 <div className="post-item__info">
                     <h2>{props.title}</h2>
                     <h3>{props.address}</h3>
-                    <p>Posted: {props.datePosted}</p>
+                    <small>Posted: <ReactTimeAgo date={props.dateCreated} /></small>
                     <p>{props.caption}</p>
                 </div>
                 <div className="post-item__actions">

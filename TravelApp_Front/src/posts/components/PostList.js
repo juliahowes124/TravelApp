@@ -1,12 +1,19 @@
 import React from 'react';
 
+ 
 import PostItem from './PostItem';
 import './PostList.css';
+
+
 
 const PostList = props => {
     return (
     <ul className="posts-list">
         {props.items
+        .sort((a,b) => {
+        return new Date(a.dateCreated).getTime() - 
+            new Date(b.dateCreated).getTime()
+        }).reverse()
         .map(post => (
             <PostItem 
                 key={post.id}
@@ -17,18 +24,13 @@ const PostList = props => {
                 address={post.address}
                 creatorId={post.creator} 
                 coordinates={post.location}
-                datePosted={post.datePosted}
+                dateCreated={post.dateCreated}
                 isUserPosts={props.isUserPosts}
                 onDelete={props.onDeletePost}
             />
         ))}
     </ul>
     )
-
-    // .sort((a,b) => {
-    //     return new Date(a.datePosted).getTime() - 
-    //         new Date(b.datePosted).getTime()
-    // }).reverse()
 
 };
 

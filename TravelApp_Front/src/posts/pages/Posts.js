@@ -20,13 +20,18 @@ const Posts = () => {
         fetchPosts();
     }, [sendRequest]);
 
+    const postDeletedHandler = deletedPostId => {
+        setLoadedPosts(prevPosts => prevPosts.filter(post => post.id !== deletedPostId));
+    }
+
+
     return (
         <React.Fragment>
             <div className="center">
                 {isLoading && <LoadingSpinner/>}
             </div>
             {error !== null && <ErrorModal error={error} onClear={clearError}/>}
-            {loadedPosts && <PostList items={loadedPosts} />}
+            {loadedPosts && <PostList items={loadedPosts} onDeletePost={postDeletedHandler}/>}
         </React.Fragment>
         
     )

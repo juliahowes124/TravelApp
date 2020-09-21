@@ -103,7 +103,8 @@ const createPost = async (req, res, next) => {
         address,
         location: coordinates,
         image: req.file.path,
-        creator
+        creator,
+        dateCreated: Date.now()
     });
 
     let user;

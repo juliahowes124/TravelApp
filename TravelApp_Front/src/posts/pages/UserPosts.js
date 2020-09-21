@@ -28,7 +28,7 @@ const UserPosts = () => {
         setLoadedPosts(prevPosts => prevPosts.filter(post => post.id !== deletedPostId));
     }
 
-    if (!loadedPosts) {
+    if (!isLoading && !loadedPosts) {
         return (
             <React.Fragment>
                 <Card className="no-places">This user has no posts.</Card>

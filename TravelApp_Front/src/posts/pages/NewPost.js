@@ -90,8 +90,8 @@ const NewPost = () => {
                     errorText="Please enter a valid address."
                     onInput={inputHandler}
                 />
-                <ImageUpload id="image" onInput={inputHandler} errorText="Please provide an image" />
-                <Button type="submit" disabled={!formState.isValid}>Post</Button>
+                <ImageUpload id="image" onInput={inputHandler}/>
+                <Button className="new-post__button" type="submit" disabled={!formState.isValid}>Post</Button>
             </form>
             </Card>
         </React.Fragment>
