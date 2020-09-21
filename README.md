@@ -19,7 +19,7 @@ Back-End: Node.JS / Express.JS / MongoDB / Mongoose / Postman
 - Authenticated routes
 - Google Maps view of location
 - Editing user information
-- Editing posts
+- CRUD operations for posts 
 
 ## Feature Demos
 
