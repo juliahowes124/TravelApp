@@ -16,7 +16,6 @@ Back-End: Node.JS / Express.JS / MongoDB / Mongoose / Postman
 ## Features
 - Client-side login and register
 - Form input validation
-- Authenticated routes
 - Google Maps view of location
 - Editing user information
 - CRUD operations for posts 
