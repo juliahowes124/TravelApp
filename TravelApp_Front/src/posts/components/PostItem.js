@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState, useContext } from 'react';
+import { useHistory } from 'react-router-dom';
 import ReactTimeAgo from 'react-time-ago';
 import JavascriptTimeAgo from 'javascript-time-ago';
  
@@ -22,6 +23,7 @@ JavascriptTimeAgo.addLocale(ru)
 const PostItem = props => {
     const { isLoading, error, sendRequest, clearError } = useHttpClient();
     const auth = useContext(AuthContext);
+    const history = useHistory();
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [showMapModal, setShowMapModal] = useState(false);
 
@@ -44,6 +46,17 @@ const PostItem = props => {
     }
     const hideMapHandler = () => {
         setShowMapModal(false);
+    }
+
+    const likeHandler = async () => {
+        try {
+            await sendRequest(`http://localhost:5000/api/posts/${props.id}/likes`, 'POST', null, {
+                Authorization: 'Bearer ' + auth.token
+            });
+            // history.push(`/${auth.userId}/likes`);
+        } catch (err) {
+        }
+        
     }
 
     return (
@@ -92,7 +105,7 @@ const PostItem = props => {
                 </div>
                 <div className="post-item__actions">
                     <Button onClick={showMapHandler}>VIEW ON MAP</Button>
-                    {auth.isLoggedIn && auth.userId !== props.creatorId && <Button to={'/u1/likes'}>LIKE</Button>}
+                    {auth.isLoggedIn && auth.userId !== props.creatorId && <Button onClick={likeHandler}>LIKE</Button>}
                     {!props.isUserPosts && auth.userId !== props.creatorId && (
                         <Button to={`/${props.creatorId}/posts`}>VIEW USER</Button>
                     )}

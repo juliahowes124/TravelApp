@@ -83,7 +83,6 @@ const getLikesForPost = async (req, res, next) => {
 
 const createPost = async (req, res, next) => {
     const errors = validationResult(req);
-    console.log(req);
     if (!errors.isEmpty()) {
         return next(new HttpError('Invalid inputs passed, please check your data', 422));
     }
@@ -125,7 +124,7 @@ const createPost = async (req, res, next) => {
     try {
         const sess = await mongoose.startSession();
         sess.startTransaction();
-        await createdPost.save({ session: sess}); // failed here
+        await createdPost.save({ session: sess});
         user.posts.push(createdPost);
         await user.save({session: sess});
         await sess.commitTransaction();
@@ -140,10 +139,24 @@ const createPost = async (req, res, next) => {
 
 const createLike = async (req, res, next) => {
     const postId = req.params.pid;
-    const userId = '5f63dcd1b03ad90887a9b15b'; //This will be fixed later when I do auth
+    const userId = req.userData.userId;
     
-    //INSERT CHECKING FOR EXISTING POST AND USER
-    //INSERT CHECK IF LIKE ALREADY EXISTS
+    try {
+        user = await User.findById(userId);
+        post = await Post.findById(postId);
+        existingLike = await Like.find({user: userId}).findOne({post: postId});
+    } catch (err) {
+        error = new HttpError('Unable to like this post.', 404);
+        return next(error);
+    }
+    
+    if (existingLike) {
+        return next(new HttpError('You have already liked this post.', 404));
+    }
+
+    if (!user || !post) {
+        return next(new HttpError('Failed to like this post.', 500));
+    }
 
     const like = new Like({
         user: userId,
