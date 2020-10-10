@@ -88,7 +88,7 @@ const createPost = async (req, res, next) => {
         return next(new HttpError('Invalid inputs passed, please check your data', 422));
     }
 
-    const {title, caption, address, creator} = req.body;
+    const {title, caption, address} = req.body;
 
     let coordinates;
     try {
@@ -103,13 +103,13 @@ const createPost = async (req, res, next) => {
         address,
         location: coordinates,
         image: req.file.path,
-        creator,
+        creator: req.userData.userId,
         dateCreated: Date.now()
     });
 
     let user;
     try {
-        user = await User.findById(creator);
+        user = await User.findById(req.userData.userId);
     } catch(err) {
         const error = new HttpError('Creating post failed. Could not retrieve user.', 500);
         return next(error);
