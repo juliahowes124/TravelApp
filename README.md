@@ -14,7 +14,8 @@ Front-End: React / CSS / JavaScript / JSX
 Back-End: Node.JS / Express.JS / MongoDB / Mongoose / Postman
 
 ## Features
-- Session management with authenticated routes
+- Session management with authenticated routes using JSON Web Tokens
+- Secure storage of user information including hashed passwords
 - Client-side login and register
 - Form input validation
 - Google Maps view of location
