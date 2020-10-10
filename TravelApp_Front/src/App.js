@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-d
 import Posts from './posts/pages/Posts';
 import MainNav from './shared/components/Nav/MainNav';
 import Users from './users/pages/Users';
+import Likers from './users/pages/Likers';
 import UserPosts from './posts/pages/UserPosts';
 import NewPost from './posts/pages/NewPost';
 import UpdatePost from './posts/pages/UpdatePost';
@@ -27,6 +28,9 @@ function App() {
         </Route>
         <Route path="/users" exact>
           <Users />
+        </Route>
+        <Route path="/:pid/likers" exact>
+          <Likers />
         </Route>
         <Route path="/:uid/posts" exact>
           <UserPosts />

@@ -50,7 +50,7 @@ const getPostsByUserId = async (req, res, next) => {
 };
 
 const getLikedPosts = async (req, res, next) => {
-    const userId = '5f63dcd1b03ad90887a9b15b'; //This will be fixed later when I do auth
+    const userId = req.userData.userId;
 
     let likes;
     try {
@@ -64,7 +64,7 @@ const getLikedPosts = async (req, res, next) => {
 }
 
 const getLikesForPost = async (req, res, next) => {
-    const postId = req.params.pid; //This will be fixed later when I do auth
+    const postId = req.params.pid;
 
     let likes;
     try {

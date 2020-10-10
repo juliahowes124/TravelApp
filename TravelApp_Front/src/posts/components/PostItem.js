@@ -53,7 +53,7 @@ const PostItem = props => {
             await sendRequest(`http://localhost:5000/api/posts/${props.id}/likes`, 'POST', null, {
                 Authorization: 'Bearer ' + auth.token
             });
-            // history.push(`/${auth.userId}/likes`);
+            history.push(`/${auth.userId}/likes`);
         } catch (err) {
         }
         
@@ -113,6 +113,7 @@ const PostItem = props => {
                         <React.Fragment>
                             <Button inverse to={`/posts/${props.id}`}>EDIT</Button>
                             <Button inverse onClick={showDeleteWarningHandler} danger>DELETE</Button>
+                            <Button to={`/${props.id}/likers`}>LIKES</Button>
                         </React.Fragment>
                     )}
                     {!auth.isLoggedIn && (

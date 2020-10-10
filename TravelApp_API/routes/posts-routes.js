@@ -12,7 +12,7 @@ router.get('/user/:uid', postsController.getPostsByUserId);
 
 router.use(checkAuth);
 
-router.get('/liked', postsController.getLikedPosts);
+router.get('/liked/:uid', postsController.getLikedPosts);
 router.get('/:pid/likes', postsController.getLikesForPost);
 router.post('/', 
     fileUpload.single('image'),
