@@ -45,6 +45,7 @@ const UpdatePost = () => {
             address: formState.inputs.address.value 
             }),
             {
+                Authorization: 'Bearer ' + auth.token,
                 'Content-Type': 'application/json'
             });
             history.push('/' + auth.userId + '/posts') ;
