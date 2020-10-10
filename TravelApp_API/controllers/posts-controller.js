@@ -175,6 +175,14 @@ const deletePost = async (req, res, next) => {
         return next(error);
     }
 
+    if (post.creator.id !== req.userData.userId) {
+        const error = new HttpError(
+            "You are not allowed to delete other users' posts",
+            401
+        );
+        return next(error);
+    }
+
     const imagePath = post.image;
 
     try {
@@ -244,6 +252,14 @@ const updatePost = async (req, res, next) => {
 
     if (!post) {
         return next(new HttpError('Could not find post for this id', 404));
+    }
+
+    if (post.creator.toString() !== req.userData.userId) {
+        const error = new HttpError(
+            "You are not allowed to edit other users' posts",
+            401
+        );
+        return next(error);
     }
 
     post.title = title;
