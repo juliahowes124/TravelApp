@@ -2,12 +2,16 @@ const express = require('express');
 const { check } = require('express-validator');
 const postsController = require('../controllers/posts-controller');
 const fileUpload = require('../middleware/file-upload');
+const checkAuth = require('../middleware/check-auth');
 
 const router = express.Router();
 
 router.get('/', postsController.getPosts);
 router.get('/:pid', postsController.getPostById);
 router.get('/user/:uid', postsController.getPostsByUserId);
+
+router.use(checkAuth);
+
 router.get('/liked', postsController.getLikedPosts);
 router.get('/:pid/likes', postsController.getLikesForPost);
 router.post('/', 
