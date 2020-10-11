@@ -1,68 +1,63 @@
-import React, {useEffect, useState} from 'react';
-import { useParams } from 'react-router-dom';
+import React, {useEffect, useContext, useState } from 'react';
+import { useParams, useHistory } from 'react-router-dom';
 
 import Input from '../../shared/components/FormElements/Input';
 import Card from '../../shared/components/UIElements/Card';
 import Button from '../../shared/components/FormElements/Button';
 import { VALIDATOR_REQUIRE, VALIDATOR_EMAIL} from '../../shared/util/validators';
 import { useForm } from '../../shared/hooks/form-hook';
+import { useHttpClient } from '../../shared/hooks/http-hook';
+import { AuthContext } from '../../shared/context/auth-context';
 import './UpdateUser.css';
 
-const USERS = [
-    {
-        id: 'u1',
-        name: 'Julia Howes',
-        email: 'julia.howes@gmail.com',
-        image: 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg',
-        places: 3
-    },
-    {
-        id: 'u2',
-        name: 'Neil Schultz-Cox',
-        email: 'neil@gmail.com',
-        image: 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg',
-        places: 2
-    }
-];
-
 const UpdateUser = () => {
-    const [isLoading, setIsLoading] = useState(true);
-    const userId = useParams().uid;
+    const { isLoading, error, sendRequest, clearError} = useHttpClient();
+    const [loadedUser, setLoadedUser] = useState();
+    const auth = useContext(AuthContext);
+    const history = useHistory();
+    const userId = auth.userId;
 
     const [formState, inputHandler, setFormData] = useForm({
         name: {
             value: '',
             isValid: false
-        },
-        email: {
-            value: '',
-            isValid: false
         }
     }, false);
 
-    const postSubmitHandler = event => {
+    const postSubmitHandler = async event => {
         event.preventDefault();
-        console.log(formState.inputs);
+        try {
+            await sendRequest(`http://localhost:5000/api/users/${userId}`,
+            'PATCH',
+            JSON.stringify({
+            name: formState.inputs.name.value,
+            }),
+            {
+                Authorization: 'Bearer ' + auth.token,
+                'Content-Type': 'application/json'
+            });
+            history.push('/') ;
+        } catch (err) {}
     }
 
-    const identifiedUser = USERS.find(u => u.id  === userId);
     useEffect(() => {
-        if (identifiedUser) {
-            setFormData({
-                name: {
-                    value: identifiedUser.name,
-                    isValid: true
-                },
-                email: {
-                    value: identifiedUser.email,
-                    isValid: true
-                }
-            }, true);
-        }
-        setIsLoading(false);
-    }, [setFormData, identifiedUser]);
+        const fetchUser = async () => {
+            try {
+                const responseData = await sendRequest(`http://localhost:5000/api/users/${userId}`);
+                setLoadedUser(responseData.user);
+                setFormData({
+                    name: {
+                        value: responseData.user.name,
+                        isValid: true
+                    }
+                })
+            
+             } catch(err) {}
+         };
+        fetchUser();
+    }, [sendRequest, userId, setFormData]);
 
-    if (!identifiedUser) {
+    if (!loadedUser) {
         return (
             <div className="center">
                 <Card><h2>Could not find user</h2></Card>
