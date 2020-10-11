@@ -220,11 +220,11 @@ const deletePost = async (req, res, next) => {
 
 const deleteLike = async (req, res, next) => {
     const postId = req.params.pid;
-    const userId = '5f63dcd1b03ad90887a9b15b'; //This will be fixed later when I do auth
+    const userId = req.userData.userId;
 
     let like;
     try {
-        like = await Like.findOne({post: postId});
+        like = await Like.find({user: userId}).findOne({post: postId});
     } catch (err) {
         const error = new HttpError('Something went wrong. Could not fetch like to delete.', 500);
         return next(error);
@@ -236,11 +236,9 @@ const deleteLike = async (req, res, next) => {
     }
 
     try {
-        console.log(like);
         await like.remove();
     } catch (err) {
         const error = new HttpError('Something went wrong. Could not delete like.', 500);
-        console.log(err);
         return next(error);
     }
     

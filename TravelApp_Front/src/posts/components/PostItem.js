@@ -53,10 +53,18 @@ const PostItem = props => {
             await sendRequest(`http://localhost:5000/api/posts/${props.id}/likes`, 'POST', null, {
                 Authorization: 'Bearer ' + auth.token
             });
-            history.push(`/${auth.userId}/likes`);
         } catch (err) {
         }
         
+    }
+    const removeLikeHandler = async () => {
+        try {
+            await sendRequest(`http://localhost:5000/api/posts/${props.id}/likes`, 'DELETE', null, {
+                Authorization: 'Bearer ' + auth.token
+            });
+            props.onRemoveLike(props.id);
+        } catch (err) {
+        }
     }
 
     return (
@@ -105,7 +113,12 @@ const PostItem = props => {
                 </div>
                 <div className="post-item__actions">
                     <Button onClick={showMapHandler}>VIEW ON MAP</Button>
-                    {auth.isLoggedIn && auth.userId !== props.creatorId && <Button onClick={likeHandler}>LIKE</Button>}
+                    {auth.isLoggedIn && auth.userId !== props.creatorId && (
+                        <React.Fragment>
+                            <Button onClick={likeHandler}>LIKE</Button>
+                            <Button onClick={removeLikeHandler}>UNLIKE</Button>
+                        </React.Fragment>
+                    )}
                     {!props.isUserPosts && auth.userId !== props.creatorId && (
                         <Button to={`/${props.creatorId}/posts`}>VIEW USER</Button>
                     )}

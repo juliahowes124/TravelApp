@@ -27,6 +27,7 @@ const PostList = props => {
                 dateCreated={post.dateCreated}
                 isUserPosts={props.isUserPosts}
                 onDelete={props.onDeletePost}
+                onRemoveLike={props.onRemoveLike}
             />
         ))}
     </ul>

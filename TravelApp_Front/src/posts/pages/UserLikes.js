@@ -23,6 +23,11 @@ const UserLikes = () => {
         fetchPosts();
     }, [sendRequest, auth.userId]);
 
+    const removeLikeHandler = removedLikeId=> {
+        console.log('removing like');
+        setLoadedPosts(prevPosts => prevPosts.filter(post => post.id !== removedLikeId));
+    }
+
     if (!isLoading && !loadedPosts) {
         return (
             <React.Fragment>
@@ -36,7 +41,7 @@ const UserLikes = () => {
         <React.Fragment>
             {error !== null && <ErrorModal error={error} onClear={clearError}/>}
             {isLoading && <div className="center"><LoadingSpinner/></div>}
-            {!isLoading && loadedPosts && <PostList isUserPosts="false" items={loadedPosts}/>}
+            {!isLoading && loadedPosts && <PostList isUserPosts="false" items={loadedPosts} onRemoveLike={removeLikeHandler}/>}
         </React.Fragment>
         
     ) 
