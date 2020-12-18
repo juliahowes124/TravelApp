@@ -20,7 +20,8 @@ Back-End: Node.JS / Express.JS / MongoDB / Mongoose / Postman
 - Form input validation
 - Google Maps view of location
 - Editing user information
-- CRUD operations for posts 
+- CRUD operations for posts
+- Ability to like and unlike posts
 
 ## Feature Demos
 
