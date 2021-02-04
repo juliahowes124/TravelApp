@@ -1,6 +1,6 @@
 # Travel App
 
-A minimalist social app for sharing travel experiences. 
+A social app for sharing travel experiences. 
 
 [See Feature Demos](#feature-demos)
 
